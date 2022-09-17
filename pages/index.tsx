@@ -1,6 +1,5 @@
 import { Container, Heading } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { PlayGame } from "../components/playGame";
 import { PlayGame2 } from "../components/PlayGame2";
 export default function Home() {
 	return (
