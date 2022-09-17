@@ -1,13 +1,7 @@
-import {
-	Button,
-	Container,
-	Heading,
-	ListItem,
-	UnorderedList,
-} from "@chakra-ui/react";
+import { Container, Heading } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Link from "next/link";
-
+import { PlayGame } from "../components/playGame";
+import { PlayGame2 } from "../components/PlayGame2";
 export default function Home() {
 	return (
 		<Container paddingY="10">
@@ -24,20 +18,9 @@ const Info = () => {
 	return (
 		<Container>
 			<Heading mt="10" mb="10">
-				✂️📜🪨WAGDI 🪨📜✂️
+				✂️📜🪨 WAGDI 🪨📜✂️
 			</Heading>
-
-			<Button
-				size="md"
-				height="48px"
-				width="200px"
-				border="2px"
-				borderColor="green.500"
-			>
-				<Heading>
-					<Link href="/play"> Play </Link>
-				</Heading>
-			</Button>
+			<PlayGame2 />
 		</Container>
 	);
 };
