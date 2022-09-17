@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.13;
+pragma solidity ^0.8.4;
+
+import "@openzeppelin/contracts/utils/Address.sol";
 
 contract Wagdi {
+    using Address for payable(address);
+
     enum Selection {
         ROCK,
         PAPER,
@@ -39,6 +43,7 @@ contract Wagdi {
     mapping(uint256 => Game) public games;
     mapping(address => PlayerBalance) public balances;
 
+
     uint256 internal gameID;
     uint256 internal constant DEADLINE = 15 minutes;
     uint256 public constant INITIAL_STAKE = 0.001 ether;
@@ -53,6 +58,13 @@ contract Wagdi {
     error YouCantPlayAgainstYourself();
     error YouAreNotAllowedToCall();
     error WrongSelection();
+    error NotEnoughBalance();
+
+    address immutable public DONATION_ADDRESS;
+
+    constructor(address donation) {
+        DONATION_ADDRESS = donation;
+    }
 
     // create game:
     // one player creates game, game has uniqe id, player1 transfers token and pass selection param to contract
@@ -144,19 +156,27 @@ contract Wagdi {
             winner = game.player2.addr;
             loser = game.player1.addr;
 
-            balances[winner].withdrawBalance += CUT;
+            // pl1: staked 1 eth
+            // pl2: staked 1 eth
+            // pl1 loses the 1 eth
+            // pl2 wins 0.5 eth and 0.5 eth goes to donation
 
-            
-            balances[loser].withdrawBalance -= CUT;
-            balances[address(this)].withdrawBalance += INITIAL_STAKE;
+            removeGameStake(game)
+
+            // add to winner withdraw balance:
+            balances[winner].withdrawBalance += INITIAL_STAKE + CUT;
+            balances[address(this)].withdrawBalance += CUT;
         } else {
-            // who won
+            // who won?
             game.player1.reveal = _selection;
             if (game.player1.reveal == game.player2.reveal) {
                 // nobody won
-                balances[game.player1.addr] -= CUT;
-                balances[game.player2.addr] -= CUT;
-                balances[address(this)] += INITIAL_STAKE;
+                removeGameStake(game)
+                
+                // add stakes to winners withdraw balance:
+                balances[game.player1.addr].withdrawBalance += CUT;
+                balances[game.player2.addr].withdrawBalance += CUT;
+                balances[address(this)].withdrawBalance += INITIAL_STAKE;
                 winner = address(this);
             } else {
                 (bool pl1, ) = evaluateGame(
@@ -174,9 +194,10 @@ contract Wagdi {
                     loser = game.player1.addr;
                 }
 
-                balances[winner] += CUT;
-                balances[loser] -= CUT;
-                balances[address(this)] += INITIAL_STAKE;
+                removeGameStake(game)
+                // add stakes to winner withdraw balance:
+                balances[winner].withdrawBalance += INITIAL_STAKE + CUT;
+                balances[address(this)].withdrawBalance += CUT;
             }
         }
 
@@ -189,6 +210,11 @@ contract Wagdi {
             winner,
             game.state
         );
+    }
+
+    function removeGameStake(Game currentGame) {
+        balances[currentGame.player1.addr].stakedBalance -= INITIAL_STAKE;
+        balances[currentGame.player2.addr].stakedBalance -= INITIAL_STAKE;
     }
 
     function validateSelection(Selection _selection)
@@ -218,11 +244,48 @@ contract Wagdi {
             return (true, false);
     }
 
-    // withdraw:
-    // player1 can donate on withdraw, player2 can donate on withdraw
+    // user can withdraw to their address
+    function withdraw() external {
+        sendToken(msg.sender, msg.sender);
+    }
 
     // donate:
     // anyone can call donate - donates money from donation pool
+    function donate() external {
+        sendToken(address(this), DONATION_ADDRESS);
+    }
+
+    function sendToken(address origin, address destination) internal {
+        amount = balances[origin].withdrawBalance
+        if (amount == 0) revert NotEnoughBalance();
+
+        balances[origin].withdrawBalance = 0;
+
+        // contract to msg.sender
+        payable(destination).sendValue(amount);
+    }
+
+    // check game expiration time and decide on how to evaluateGame
+    function unlockStakedValue(uint256 _gameId) public {
+        Game storage game = games[_gameId];
+
+        // time has expired and state is still not finished
+        if (block.timestamp < game.deadline) revert GameNotExpired();
+        if (game.state == State.FINISHED) revert GameHasEnded();
+
+        if (game.State == FIRST_COMMIT) {
+            // pl1 played but pl2 not, pl1 gets money back
+            balances[game.player1.addr].stakedBalance -= INITIAL_STAKE
+            balances[game.player1.addr].withdrawBalance += INITIAL_STAKE
+        } else if (game.State == FIRST_REVEAL) {
+            // pl2 played but pl1 did not reveal, pl1 loses
+            removeGameStake(game)
+
+            // add to winner withdraw balance:
+            balances[game.player2.addr].withdrawBalance += INITIAL_STAKE + CUT;
+            balances[address(this)].withdrawBalance += CUT;
+        }
+    }
 
     // endGame:
     // if one playe not reveals or reveals a wrong passphrase, the game is ended and the other player wins
