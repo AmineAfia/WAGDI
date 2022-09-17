@@ -10,10 +10,12 @@ contract Wagdi {
     enum Selection {
         ROCK,
         PAPER,
-        SCISSORS
+        SCISSORS,
+        LIZZARD,
+        SPOCK
     }
 
-    uint8 private constant selection_length = 2;
+    uint8 private constant selection_length = 4;
 
     enum State {
         FIRST_COMMIT,
@@ -70,7 +72,7 @@ contract Wagdi {
     // create game:
     // one player creates game, game has uniqe id, player1 transfers token and pass selection param to contract
     // emit event: GameCreated(id, timestamp, sender)
-    function createGame(bytes32 _commitment) public payable {
+    function createGame(bytes32 _commitment) public payable returns(uint256){
         if (msg.value != INITIAL_STAKE) revert NotEnoughStake();
         balances[msg.sender].stakedBalance += msg.value;
         Game storage game = games[gameID];
@@ -90,6 +92,8 @@ contract Wagdi {
         );
 
         gameID++;
+
+        return game.gameId;
     }
 
     // join game by id:
@@ -235,14 +239,38 @@ contract Wagdi {
             return (true, false);
         if (_selection1 == Selection.ROCK && _selection2 == Selection.PAPER)
             return (false, true);
+        if (_selection1 == Selection.ROCK && _selection2 == Selection.LIZZARD)
+            return (true, false);
+        if (_selection1 == Selection.ROCK && _selection2 == Selection.SPOCK)
+            return (false, true);
+        
         if (_selection1 == Selection.PAPER && _selection2 == Selection.ROCK)
             return (true, false);
         if (_selection1 == Selection.PAPER && _selection2 == Selection.SCISSORS)
             return (false, true);
+        if (_selection1 == Selection.PAPER && _selection2 == Selection.SPOCK)
+            return (true, false);
+        if (_selection1 == Selection.PAPER && _selection2 == Selection.LIZZARD)
+            return (false, true);
+        
         if (_selection1 == Selection.SCISSORS && _selection2 == Selection.ROCK)
             return (false, true);
         if (_selection1 == Selection.SCISSORS && _selection2 == Selection.PAPER)
             return (true, false);
+        if (_selection1 == Selection.SCISSORS && _selection2 == Selection.SPOCK)
+            return (false, true);
+        if (_selection1 == Selection.SCISSORS && _selection2 == Selection.LIZZARD)
+            return (true, false);
+        
+        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.PAPER)
+            return (true, false);
+        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.SPOCK)
+            return (true, false);
+        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.ROCK)
+            return (true, false);
+        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.SCISSORS)
+            return (false, true);
+        
     }
 
     // user can withdraw to their address
@@ -286,6 +314,10 @@ contract Wagdi {
             balances[game.player2.addr].withdrawBalance += INITIAL_STAKE + CUT;
             balances[address(this)].withdrawBalance += CUT;
         }
+    }
+
+    function getCommit(Selection _selection, bytes memory _passphrase) external pure returns(bytes32) {
+        return keccak256(abi.encodePacked(_selection, _passphrase));
     }
 
     // endGame:
