@@ -1,7 +1,6 @@
 import { Container, Heading, Stack, Button, Box, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePrepareContractWrite } from "wagmi";
 
 const Play = () => {
 	const [userSelection, setUserSelection] = useState(null);
