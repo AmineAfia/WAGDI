@@ -1,0 +1,509 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "donation",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "GameExpired",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "GameHasEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "GameNotExpired",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "NotEnoughBalance",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "NotEnoughStake",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "WrongSelection",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "WrongState",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "YouAreNotAllowedToCall",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "YouCantPlayAgainstYourself",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "player1",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Wagdi.State",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "GameCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "player2",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Wagdi.State",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "GameJoined",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Wagdi.State",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "GameResult",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "CUT",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "DONATION_ADDRESS",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "INITIAL_STAKE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "balances",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "stakedBalance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "withdrawBalance",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_commitment",
+        "type": "bytes32"
+      }
+    ],
+    "name": "createGame",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "donate",
+    "outputs": [
+      
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "games",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "addr",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "commitment",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "enum Wagdi.Selection",
+            "name": "reveal",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct Wagdi.Player",
+        "name": "player1",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "addr",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "commitment",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "enum Wagdi.Selection",
+            "name": "reveal",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct Wagdi.Player",
+        "name": "player2",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum Wagdi.State",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum Wagdi.Selection",
+        "name": "_selection",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_passphrase",
+        "type": "bytes"
+      }
+    ],
+    "name": "getCommit",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum Wagdi.Selection",
+        "name": "_selection",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_passphrase",
+        "type": "bytes"
+      }
+    ],
+    "name": "joinGame",
+    "outputs": [
+      
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "player1",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "commitment",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum Wagdi.Selection",
+        "name": "reveal",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "player2",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "commitment",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum Wagdi.Selection",
+        "name": "reveal",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum Wagdi.Selection",
+        "name": "_selection",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_passphrase",
+        "type": "bytes"
+      }
+    ],
+    "name": "reveal",
+    "outputs": [
+      
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_gameId",
+        "type": "uint256"
+      }
+    ],
+    "name": "unlockStakedValue",
+    "outputs": [
+      
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      
+    ],
+    "name": "withdraw",
+    "outputs": [
+      
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
