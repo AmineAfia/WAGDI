@@ -4,9 +4,9 @@ We All Gonna Donate It - a fun game to nurture donations to public goods through
 
 Every time you play, you fund public goods. 
 
-Say John 🕺 and Alice 💃 want to play, both use a web3 browser to join:
+Say John 🕺 and Alice 💃 want to play, both use a web3 browser to join, if using your phone please use the browser on the Metamask app
 
-1 Alice starts the game by using this https://wagdi.vercel.app, stakes an amount to the pot and shares the gameID with John.
+1. Alice starts the game by using this https://wagdi.vercel.app, stakes an amount to the pot and shares the gameID with John.
 
 2. John joins the game using https://wagdi.vercel.app/join, stakes the same amount to the pot and inputs the gameID
 
