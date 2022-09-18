@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import * as React from "react";
 import { useContractRead } from "wagmi";
 import abi from "../assets/abi.json";
+import { ResultModal } from "./ResultModal";
 
 const contractAddress = "0x84866CCf525128a8290c10031CEf0B4B98EA5C69";
 
@@ -14,7 +15,8 @@ export function JoinAndPlay(props) {
 	const [isSuccess, setSuccess] = React.useState(undefined);
 	const [gameId, setGameId] = React.useState(undefined);
 	const options = ["🪨", "📜", "✂️", "🦎", "🖖"];
-
+	//TODO generate the id randomly
+	const passPhrase = "0x123456";
 	const clickHandler = (value) => {
 		setUserSelection(choosing == true ? value : null);
 		setChoosing(choosing == true ? false : true);
@@ -47,7 +49,7 @@ export function JoinAndPlay(props) {
 
 		const pendingTxn = await wagdiContract
 			.connect(signer)
-			.joinGame(parseInt(props.gameId), 1, "0x123456", {
+			.joinGame(parseInt(props.gameId), index, passPhrase, {
 				value: ethers.utils.parseEther("0.001"),
 			});
 		console.log(pendingTxn);
@@ -73,6 +75,16 @@ export function JoinAndPlay(props) {
 			const newGameId = iface.decodeEventLog("GameJoined", tt.data);
 			setGameId(newGameId["gameId"]);
 		});
+	};
+
+	const seeResult = () => {
+		return (
+			<ResultModal
+				gameId={props.gameId}
+				selection={index}
+				passphrase={passPhrase}
+			/>
+		);
 	};
 
 	return (
@@ -105,7 +117,7 @@ export function JoinAndPlay(props) {
 				</div>
 			)}
 
-			{gameId && `Game Id: ${gameId}`}
+			{gameId && seeResult()}
 		</div>
 	);
 }

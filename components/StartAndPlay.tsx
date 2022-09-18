@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import * as React from "react";
 import { useContractRead } from "wagmi";
 import abi from "../assets/abi.json";
+import { ResultModal } from "./ResultModal";
 
 const contractAddress = "0x84866CCf525128a8290c10031CEf0B4B98EA5C69";
 
@@ -13,8 +14,10 @@ export function StartAndPlay() {
 	const [isLoading, setLoading] = React.useState(false);
 	const [isSuccess, setSuccess] = React.useState(undefined);
 	const [gameId, setGameId] = React.useState(undefined);
+	const [gameClosed, setGameClosed] = React.useState(undefined);
 	const options = ["🪨", "📜", "✂️", "🦎", "🖖"];
-
+	//TODO: generate random passphrase
+	const passPhrase = "0x1224";
 	const clickHandler = (value) => {
 		setUserSelection(choosing == true ? value : null);
 		setChoosing(choosing == true ? false : true);
@@ -44,11 +47,11 @@ export function StartAndPlay() {
 			abi,
 			provider
 		);
-		const committement = await wagdiContract.getCommit(0, "0x1224");
+		const commitment = await wagdiContract.getCommit(index, passPhrase);
 
 		const pendingTxn = await wagdiContract
 			.connect(signer)
-			.createGame(committement, {
+			.createGame(commitment, {
 				value: ethers.utils.parseEther("0.001"),
 			});
 		console.log(pendingTxn);
@@ -73,6 +76,22 @@ export function StartAndPlay() {
 			const iface = new ethers.utils.Interface(abi);
 			const newGameId = iface.decodeEventLog("GameCreated", tt.data);
 			setGameId(newGameId["gameId"]);
+		});
+
+		const JoinGamefilter = {
+			address: contractAddress,
+			topics: [
+				// the name of the event, parnetheses containing the data type of each event, no spaces
+				ethers.utils.id(
+					"GameJoined(uint256,uint256,uint256,address,uint8)"
+				),
+			],
+		};
+
+		websocketProvider.on(JoinGamefilter, async (tt) => {
+			const iface = new ethers.utils.Interface(abi);
+			const newGameId = iface.decodeEventLog("GameJoined", tt.data);
+			setGameClosed(true);
 		});
 	};
 
@@ -106,7 +125,14 @@ export function StartAndPlay() {
 				</div>
 			)}
 
-			{gameId && `Game Id: ${gameId}`}
+			{gameId && `Share this code with you opponent: ${gameId}`}
+			{gameClosed && (
+				<ResultModal
+					gameId={gameId}
+					selection={index}
+					passphrase={passPhrase}
+				/>
+			)}
 		</div>
 	);
 }
