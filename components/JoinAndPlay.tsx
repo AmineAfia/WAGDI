@@ -6,7 +6,7 @@ import abi from "../assets/abi.json";
 
 const contractAddress = "0x84866CCf525128a8290c10031CEf0B4B98EA5C69";
 
-export function JoinAndPlay() {
+export function JoinAndPlay(props) {
 	const [userSelection, setUserSelection] = React.useState(null);
 	const [index, setIndex] = React.useState(0);
 	const [choosing, setChoosing] = React.useState(true);
@@ -44,11 +44,10 @@ export function JoinAndPlay() {
 			abi,
 			provider
 		);
-		const committement = await wagdiContract.getCommit(0, "0x1224");
 
 		const pendingTxn = await wagdiContract
 			.connect(signer)
-			.createGame(committement, {
+			.joinGame(parseInt(props.gameId), 1, "0x123456", {
 				value: ethers.utils.parseEther("0.001"),
 			});
 		console.log(pendingTxn);
@@ -58,7 +57,7 @@ export function JoinAndPlay() {
 			topics: [
 				// the name of the event, parnetheses containing the data type of each event, no spaces
 				ethers.utils.id(
-					"GameCreated(uint256,uint256,uint256,address,uint8)"
+					"GameJoined(uint256,uint256,uint256,address,uint8)"
 				),
 			],
 		};
@@ -71,7 +70,7 @@ export function JoinAndPlay() {
 		);
 		websocketProvider.on(filter, async (tt) => {
 			const iface = new ethers.utils.Interface(abi);
-			const newGameId = iface.decodeEventLog("GameCreated", tt.data);
+			const newGameId = iface.decodeEventLog("GameJoined", tt.data);
 			setGameId(newGameId["gameId"]);
 		});
 	};

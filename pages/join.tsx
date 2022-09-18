@@ -71,7 +71,12 @@ export default function Join() {
 			<div>
 				<ConnectButton />
 				{gameId}
-				<Info />
+				<Container>
+					<Heading mt="10" mb="10">
+						✂️📜🪨WAGDI 🪨📜✂️
+					</Heading>
+					<JoinAndPlay gameId={gameId} />
+				</Container>
 			</div>
 		);
 	};
@@ -83,14 +88,3 @@ export default function Join() {
 	);
 }
 
-// Feel free to delete this before getting started
-const Info = () => {
-	return (
-		<Container>
-			<Heading mt="10" mb="10">
-				✂️📜🪨WAGDI 🪨📜✂️
-			</Heading>
-			<JoinAndPlay />
-		</Container>
-	);
-};
