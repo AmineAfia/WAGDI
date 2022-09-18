@@ -6,13 +6,27 @@ import {
 	UnorderedList,
 } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ethers } from "ethers";
 import Link from "next/link";
+import { PlayGame } from "../components/PlayGame";
+import { useEffect } from "react";
 
 export default function Home() {
+	useEffect(() => {
+		// const tt = provider.getBlockNumber();
+		// tt.then((foo) => {
+		// 	console.log(foo);
+		// });
+		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		provider.send("eth_requestAccounts", []).then(() => {
+			const signer = provider.getSigner();
+			console.log(signer);
+		});
+	});
+
 	return (
 		<Container paddingY="10">
 			<ConnectButton />
-
 			{/* Feel free to delete this Info section before getting started */}
 			<Info />
 		</Container>
@@ -26,18 +40,7 @@ const Info = () => {
 			<Heading mt="10" mb="10">
 				✂️📜🪨WAGDI 🪨📜✂️
 			</Heading>
-
-			<Button
-				size="md"
-				height="48px"
-				width="200px"
-				border="2px"
-				borderColor="green.500"
-			>
-				<Heading>
-					<Link href="/play"> Play </Link>
-				</Heading>
-			</Button>
+			<PlayGame />
 		</Container>
 	);
 };
