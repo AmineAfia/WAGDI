@@ -7,8 +7,11 @@ Every time you play, you fund public goods.
 Say John 🕺 and Alice 💃 want to play, both use a web3 browser to join:
 
 1 Alice starts the game by using this https://wagdi.vercel.app, stakes an amount to the pot and shares the gameID with John.
+
 2. John joins the game using https://wagdi.vercel.app/join, stakes the same amount to the pot and inputs the gameID
+
 3. Alice has to reveal the results (we explain why later)
+
 4. If John wins, we donate a quarter of the pot to public goods, and vice-versa for Alice. When it´s a draw, we donate half the pot to public goods. 👼👼
 
 We are playing games, having fun and every single time donating to public goods, hurray 🎉
