@@ -11,7 +11,7 @@ contract Wagdi {
         ROCK,
         PAPER,
         SCISSORS,
-        LIZZARD,
+        LIZARD,
         SPOCK
     }
 
@@ -239,7 +239,7 @@ contract Wagdi {
             return (true, false);
         if (_selection1 == Selection.ROCK && _selection2 == Selection.PAPER)
             return (false, true);
-        if (_selection1 == Selection.ROCK && _selection2 == Selection.LIZZARD)
+        if (_selection1 == Selection.ROCK && _selection2 == Selection.LIZARD)
             return (true, false);
         if (_selection1 == Selection.ROCK && _selection2 == Selection.SPOCK)
             return (false, true);
@@ -250,7 +250,7 @@ contract Wagdi {
             return (false, true);
         if (_selection1 == Selection.PAPER && _selection2 == Selection.SPOCK)
             return (true, false);
-        if (_selection1 == Selection.PAPER && _selection2 == Selection.LIZZARD)
+        if (_selection1 == Selection.PAPER && _selection2 == Selection.LIZARD)
             return (false, true);
         
         if (_selection1 == Selection.SCISSORS && _selection2 == Selection.ROCK)
@@ -259,17 +259,27 @@ contract Wagdi {
             return (true, false);
         if (_selection1 == Selection.SCISSORS && _selection2 == Selection.SPOCK)
             return (false, true);
-        if (_selection1 == Selection.SCISSORS && _selection2 == Selection.LIZZARD)
+        if (_selection1 == Selection.SCISSORS && _selection2 == Selection.LIZARD)
             return (true, false);
         
-        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.PAPER)
+        if (_selection1 == Selection.LIZARD && _selection2 == Selection.PAPER)
             return (true, false);
-        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.SPOCK)
+        if (_selection1 == Selection.LIZARD && _selection2 == Selection.SPOCK)
             return (true, false);
-        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.ROCK)
+        if (_selection1 == Selection.LIZARD && _selection2 == Selection.ROCK)
             return (true, false);
-        if (_selection1 == Selection.LIZZARD && _selection2 == Selection.SCISSORS)
+        if (_selection1 == Selection.LIZARD && _selection2 == Selection.SCISSORS)
             return (false, true);
+     
+        if (_selection1 == Selection.SPOCK && _selection2 == Selection.PAPER)
+            return (false, true);
+        if (_selection1 == Selection.SPOCK && _selection2 == Selection.LIZARD)
+            return (false, true);
+        if (_selection1 == Selection.SPOCK && _selection2 == Selection.ROCK)
+            return (true, false);
+        if (_selection1 == Selection.SPOCK && _selection2 == Selection.SCISSORS)
+            return (true, false);
+     
         
     }
 
