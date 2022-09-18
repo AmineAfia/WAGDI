@@ -8,7 +8,7 @@ import {
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ethers } from "ethers";
 import Link from "next/link";
-import { PlayGame } from "../components/PlayGame";
+import { StartAndPlay } from "../components/StartAndPlay";
 import { useEffect } from "react";
 
 export default function Home() {
@@ -40,7 +40,7 @@ const Info = () => {
 			<Heading mt="10" mb="10">
 				✂️📜🪨WAGDI 🪨📜✂️
 			</Heading>
-			<PlayGame />
+			<StartAndPlay />
 		</Container>
 	);
 };

@@ -6,7 +6,7 @@ import abi from "../assets/abi.json";
 
 const contractAddress = "0x84866CCf525128a8290c10031CEf0B4B98EA5C69";
 
-export function PlayGame() {
+export function StartAndPlay() {
 	const [userSelection, setUserSelection] = React.useState(null);
 	const [index, setIndex] = React.useState(0);
 	const [choosing, setChoosing] = React.useState(true);
