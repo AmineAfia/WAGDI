@@ -50,7 +50,7 @@ export function JoinAndPlay(props) {
 		const pendingTxn = await wagdiContract
 			.connect(signer)
 			.joinGame(parseInt(props.gameId), index, passPhrase, {
-				value: ethers.utils.parseEther("0.001"),
+				value: ethers.utils.parseEther("0.01"),
 			});
 		console.log(pendingTxn);
 

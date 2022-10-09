@@ -4,7 +4,7 @@ import * as React from "react";
 import { useContractRead } from "wagmi";
 import abi from "../assets/abi.json";
 import { ResultModal } from "./ResultModal";
-
+import { Dragon } from "0xdragon";
 const contractAddress = "0x84866CCf525128a8290c10031CEf0B4B98EA5C69";
 
 export function StartAndPlay() {
@@ -47,36 +47,44 @@ export function StartAndPlay() {
 			abi,
 			provider
 		);
+		const dragon = new Dragon("polygonToTheMoon", "myABI");
+
 		const commitment = await wagdiContract.getCommit(index, passPhrase);
-
-		const pendingTxn = await wagdiContract
-			.connect(signer)
-			.createGame(commitment, {
-				value: ethers.utils.parseEther("0.001"),
-			});
-		console.log(pendingTxn);
-
-		const filter = {
-			address: contractAddress,
-			topics: [
-				// the name of the event, parnetheses containing the data type of each event, no spaces
-				ethers.utils.id(
-					"GameCreated(uint256,uint256,uint256,address,uint8)"
-				),
-			],
-		};
-
-		setSuccess(pendingTxn.hash);
-
 		const websocketProvider = new ethers.providers.AlchemyWebSocketProvider(
 			"goerli",
 			"QSiAQ6zbT7ol22NKgKIFh65LO0cFLy5Y"
 		);
-		websocketProvider.on(filter, async (tt) => {
-			const iface = new ethers.utils.Interface(abi);
-			const newGameId = iface.decodeEventLog("GameCreated", tt.data);
-			setGameId(newGameId["gameId"]);
-		});
+
+		try {
+			const pendingTxn = await wagdiContract
+				.connect(signer)
+				.createGame(commitment, {
+					value: ethers.utils.parseEther("0.009"),
+				});
+			console.log(pendingTxn);
+
+			const filter = {
+				address: contractAddress,
+				topics: [
+					// the name of the event, parnetheses containing the data type of each event, no spaces
+					ethers.utils.id(
+						"GameCreated(uint256,uint256,uint256,address,uint8)"
+					),
+				],
+			};
+
+			setSuccess(pendingTxn.hash);
+
+			websocketProvider.on(filter, async (tt) => {
+				const iface = new ethers.utils.Interface(abi);
+				const newGameId = iface.decodeEventLog("GameCreated", tt.data);
+				setGameId(newGameId["gameId"]);
+			});
+		} catch (e) {
+			dragon.error(e.error, e.transaction);
+			dragon.wallet(e.transaction.from, e.transaction.value._hex);
+			throw e;
+		}
 
 		const JoinGamefilter = {
 			address: contractAddress,
